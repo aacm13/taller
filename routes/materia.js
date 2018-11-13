@@ -41,6 +41,30 @@ router.get('/:name', function (req, res) {
     }
 });
 
+router.get('/delete/:name', function (req, res) {
+    if (req.params.name) {
+        materiaModel.deleteOne({
+            nombre: req.params.name
+        }, function (err, materia) {
+            if (err) {
+                res.status(500);
+                res.json({
+                    status: 500,
+                    err
+                });
+            } else {
+                res.json(materia);
+            }
+        });
+    } else {
+        res.status(400);
+        res.json({
+            status: 400,
+            err: 'Bad Request'
+        })
+    }
+});
+
 router.post('/', function(req,res){
     let Materia = new materiaModel({
         nombre: req.body.name,
@@ -54,6 +78,18 @@ router.post('/', function(req,res){
             res.send({err});
         }
         res.send({message: "saved" , success:true});
+    });
+});
+
+router.post('/:name', function(req,res){
+    
+
+    materiaModel.findOneAndUpdate({nombre: req.body.name}, {$set:{uv:req.body.uv,descripcion: req.body.descripcion}},function(err){
+        if (err){
+            res.status(500)
+            res.send({err});
+        }
+        res.send({message: "update" , success:true});
     });
 });
 

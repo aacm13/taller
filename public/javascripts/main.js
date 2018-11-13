@@ -32,7 +32,42 @@ let app = {
                             fetch('/materia/' + name)
                                 .then(res => res.json())
                                 .then(function (data) {
+                                    alert('Nombre materia: '+data.nombre+" , uvs: "+data.uv + ', descripcion: '+ data.descripcion);
+                                });
+                        });
+                    });
+
+                    document.querySelectorAll(".edit").forEach(element => {
+                        element.addEventListener('click', function (evnt) {
+                            evnt.preventDefault();
+                            let name = this.parentElement // td
+                                .parentElement // tr
+                                .getElementsByClassName("name")[0]
+                                .innerText;
+                                fetch('/materia/' + name, {
+                                    method: 'POST',
+                                    body: new URLSearchParams(new FormData(form))
+                                }).then(res => res.json())
+                                .then(data => {
                                     console.log(data);
+                                    loadContent();
+                                });
+                        });
+                    });
+
+                    document.querySelectorAll(".delete").forEach(element => {
+                        element.addEventListener('click', function (evnt) {
+                            evnt.preventDefault();
+                            let name = this.parentElement // td
+                                .parentElement // tr
+                                .getElementsByClassName("name")[0]
+                                .innerText;
+                            fetch('/materia/delete/' + name)
+                                .then(res => res.json())
+                                .then(function (data) {
+                                    alert('Materia eliminada');
+                                    loadContent();
+                                    //console.log(data);
                                 });
                         });
                     });
